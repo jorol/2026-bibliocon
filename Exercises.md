@@ -3,10 +3,16 @@
 Login per SSH and download files for the exercises:
 
 ```bash
+# ssh connection
 $ ssh <user>@<ipaddress>
+# download files
 $ wget https://jorol.github.io/2026-bibliocon/files/processing-marc.zip
+# unzip files
 $ unzip processing-marc.zip
+# move to directory
 $ cd processing-marc
+# list directories and files
+$ ls -1 .
 ```
 
 ## MARC 21 documentation
