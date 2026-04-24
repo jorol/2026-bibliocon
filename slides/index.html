@@ -540,10 +540,11 @@ Z> exit
 ```
 
 ---
-class: middle
+
 ## Z39.50 - yaz-client command file
 
 ```
+# show command file
 $ cat z3950.cmdfile
 open lx2.loc.gov/LCDB
 format 1.2.840.10003.5.10
@@ -552,7 +553,10 @@ set_marcdump z3950_loc.mrc
 find @attr 5=100 @attr 1=21 "Perl"
 show 1+50
 exit
+# run command file
 $ yaz-client -f z3950.cmdfile
+# show records
+cat -v z3950_loc.mrc
 ```
 
 ---
@@ -601,17 +605,21 @@ Z> exit
 ```
 
 ---
-class: middle
+
 ## SRU - yaz-client command file
 
 ```
+# show command file
 $ cat sru.cmdfile
 open http://sru.k10plus.de/opac-de-627
 set_marcdump sru_k10p.mrc.xml
 find pica.per="Tempest, Kae"
 show 1+50
 exit
+# run command file
 $ yaz-client -f sru.cmdfile
+# shopw records 
+$ xmllint --formatt sru_k10p.mrc.xml
 ```
 
 ---
@@ -653,7 +661,6 @@ to YAML
 ```
 
 ---
-
 class: middle
 
 ## MARC 21 validation
