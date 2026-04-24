@@ -1,0 +1,7 @@
+open lx2.loc.gov/LCDB
+format 1.2.840.10003.5.10
+element F
+set_marcdump z3950_loc.mrc
+find @attr 5=100 @attr 1=21 "Perl"
+show 1+50
+exit
