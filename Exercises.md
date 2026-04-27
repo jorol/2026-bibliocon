@@ -45,7 +45,7 @@ $ less code4lib.seq
 
 ... from a Z39.50 server with `yaz-client` and a command file
 
-See [ATTRIBUTE SET BIB-1 (Z39.50-1995)](https://www.loc.gov/z3950/agency/bib1.html) for other attribute values.
+See ["Bath Profile"](http://www.ukoln.ac.uk/interop-focus/activities/z3950/int_profile/bath/draft/stable1.html#5.A.1.%20Functional%20Area%20A:%20Level%201%20Basic%20Bibliographic%20Search%20and%20Retrieval%20Emphasizing%20Precision) or ["Bib-1 Attribute Set"](https://software.indexdata.com/yaz/doc/bib1.html) for common search and retrieval operations and attribute sets.
 
 ```bash
 # show command file
@@ -67,12 +67,12 @@ You can edit the command file, e.g. the query:
 
 ```bash
 $ micro z3950.cmdfile 
-# press `CTRL + s` to save file and `CTRL+ x` to quit editor
+# press `CTRL + s` to save file and `CTRL + x` to quit editor
 ```
 
 ### ... from a SRU server with `catmandu`
 
-See [SRU explain](https://sru.kobv.de/k2?operation=explain&version=1.1) for other supported indices and formats and [Catmandu::SRU](https://metacpan.org/pod/Catmandu::SRU)
+See [SRU explain](https://sru.kobv.de/k2?operation=explain&version=1.1) for supported indices and formats and [Catmandu::SRU](https://metacpan.org/pod/Catmandu::SRU)
  for client options.
 
 ```bash
@@ -91,26 +91,29 @@ $ xmllint --format sru_kobv.xml
 ### ... with `yaz-marcdump`
 
 ```bash
-# MARC 21 ISO format
+# validate MARC 21 ISO format
 $ yaz-marcdump -n loc.mrc
-# MARC 21 XML format
-$ yaz-marcdump -n -i marcxml loc.mrc.xml
-# show MARC 21 ISO file with errors 
+# validate MARC 21 XML format
+$ yaz-marcdump -n -i marcxml sru_kobv.xml
+# validate MARC 21 ISO file with errors 
 $ yaz-marcdump -n pride-and-prejudice-with-many-errors.mrc
 ```
 
 ### ... with `xmllint`
 
 ```bash
-$ xmllint --noout \
---schema MARC21slim.xsd \
-loc.mrc.xml
+# just validate file, no other ouptput
+$ xmllint --noout --schema MARC21slim.xsd loc.mrc.xml
+$ xmllint --noout --schema MARC21slim.xsd sru_kobv.xml
+
 ```
 
 ### ... with `marcvalidate`
 
 ```bash
+# validate MARC 21 ISO format
 $ marcvalidate loc.mrc
+# validate MARC 21 XML format
 $ marcvalidate --type XML loc.mrc.xml
 ```
 
@@ -119,6 +122,7 @@ $ marcvalidate --type XML loc.mrc.xml
 ### ... with `marcstats.pl`
 
 ```bash
+# generate statistics for MARC 21 ISO format
 $ marcstats.pl loc.mrc
 # marcstats.pl can handle only MARC (ISO 2709) files
 # use a command line substitution to generate that format
