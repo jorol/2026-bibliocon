@@ -1,6 +1,6 @@
 # Hands-on Lab "Processing MARC … with open source tools"
 
-In 2002 Roy Tennant declared ["MARC Must Die"](http://soiscompsfall2007.pbworks.com/f/marc+must+die.pdf). Today the [MARC 21 format](https://www.loc.gov/marc/) is still the workhorse of library metadata. Even our "Next Generation Library Systems" heavily rely on this standard from the ‘60s. This boot camp will give an introduction to this arcane standard. Topics will be:
+In 2002 Roy Tennant declared "[MARC Must Die](http://soiscompsfall2007.pbworks.com/f/marc+must+die.pdf)". Today the [MARC 21 format](https://www.loc.gov/marc/) is still the workhorse of library metadata. Even our "Next Generation Library Systems" heavily rely on this standard from the ‘60s. This boot camp will give an introduction to this arcane standard. Topics will be:
 
 * Structure of MARC 21 records and their different serializations (MARC, MARCXML, MARCMaker, ALEPSEQ, ...)
 

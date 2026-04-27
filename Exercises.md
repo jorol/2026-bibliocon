@@ -45,7 +45,7 @@ $ less code4lib.seq
 
 ... from a Z39.50 server with `yaz-client` and a command file
 
-See ["Bath Profile"](http://www.ukoln.ac.uk/interop-focus/activities/z3950/int_profile/bath/draft/stable1.html#5.A.1.%20Functional%20Area%20A:%20Level%201%20Basic%20Bibliographic%20Search%20and%20Retrieval%20Emphasizing%20Precision) or ["Bib-1 Attribute Set"](https://software.indexdata.com/yaz/doc/bib1.html) for common search and retrieval operations and attribute sets.
+See "[Bath Profile](http://www.ukoln.ac.uk/interop-focus/activities/z3950/int_profile/bath/draft/stable1.html#5.A.1.%20Functional%20Area%20A:%20Level%201%20Basic%20Bibliographic%20Search%20and%20Retrieval%20Emphasizing%20Precision)" or "[Bib-1 Attribute Set](https://software.indexdata.com/yaz/doc/bib1.html)" for common search and retrieval operations and attribute sets.
 
 ```bash
 # show command file
