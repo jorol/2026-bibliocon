@@ -543,7 +543,7 @@ exit
 # run command file
 $ yaz-client -f z3950.cmdfile
 # show records
-cat -v z3950_loc.mrc
+$ cat -v z3950_loc.mrc
 ```
 
 ---
@@ -652,7 +652,6 @@ $ yaz-marcdump -n -i marcxml loc.mrc.xml
 If `yaz-marcdump` finds any errors it will output an error message:
 
 ```bash
-```bash
 $ yaz-marcdump -np bad_hathi_records.mrc 
 <!-- Record 1 offset 0 (0x0) -->
 <!-- Record 2 offset 1293 (0x50d) -->
@@ -660,14 +659,10 @@ $ yaz-marcdump -np bad_hathi_records.mrc
 <!-- Record 4 offset 6343 (0x18c7) -->
 <!-- EOF while searching for RS -->
 ```
-```
 
 ---
 
-class: middle
-
 ## [Common structural problems](https://bibwild.wordpress.com/2010/02/02/structural-marc-problems-you-may-encounter/) in MARC records:
-
 
 - invalid leader bytes
 - record exceeds the maximum length
@@ -701,8 +696,6 @@ chabon-bad-subfields-element.xml fails to validate
 ## ... with marcvalidate
 
 While `yaz-marcdump` and `xmllint` are useful to identify structural problems within MARC records, `marcvalidate` can be used to validate MARC tags and subfield against a [Avram](https://format.gbv.de/schema/avram/specification) specification. The default specification was build by [Péter Király](https://pkiraly.github.io/2018/01/28/marc21-in-json/) based on the MARC documentation of the Library of Congress. The specification can be enhanced with local defined fields.
-
-By default `marcvalidate` expects "MARC (ISO 2709)" records:
 
 ```bash
 # validate MARC ISO records
@@ -758,8 +751,6 @@ $ catmandu convert MARC --type XML to Breaker --handler marc \
 < loc.mrc.xml > loc.breaker
 $ catmandu breaker loc.breaker
 ```
-
----
 
 With option `--fields` you can calculate statistics for specific tags and subfield codes:
 
@@ -822,8 +813,6 @@ $ uconv -x NFD marc21.nfc.xml > marc21.nfd.xml
 
 You should only normalize "MARC XML" data, as the normalization of "MARC (ISO 2709)" would result in corrupted records, due to different field length.
 
----
-
 Use option `-x Any-Name` to show Unicode names of characters:
 
 ```bash
@@ -867,7 +856,7 @@ $ catmandu convert MARC toe MARC --type XML < code4lib.mrc \
 # MARC XML to MARC (ISO 2709)
 $ catmandu convert MARC --type XML to MARC < code4lib.xml \
 > code4lib.mrc
-MARC (ISO 2709) to MARCMaker
+# MARC (ISO 2709) to MARCMaker
 $ catmandu convert MARC to MARC --type MARCMaker < code4lib.mrc \
 > code4lib.mrk
 # MARC XML to MARC-in-JSON
@@ -929,8 +918,6 @@ You can export MARC records to nested formats like JSON and YAML:
 $ catmandu convert MARC to YAML < code4lib.mrc
 $ catmandu convert MARC to JSON < code4lib.mrc
 ```
-
----
 
 This will **not** work:
 
@@ -1023,7 +1010,6 @@ loc.mrc.xml
 
 ## xmllint --xpath
 
-
 ```bash
 # extract all tags and count them
 $ xmllint --xpath '//@tag' loc.mrc.xml | sort | uniq -c
@@ -1040,7 +1026,6 @@ $ xmllint --xpath '//*[local-name()="datafield"][@tag="020"]/*[local-name()="sub
 # extract all DDC numbers
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="082"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
 ```
-
 
 ---
 
@@ -1317,14 +1302,6 @@ isbn13(isbn)
 
 ---
 
-## Thanks
-
-... to all open source developers and the Catmandu community for creating the tools
-
-... to Roy Tennant and Péter Király for their research on MARC 21 data
-
----
-
 ## Contact details
 
 Johann Rolschewski johann.rolschewski@sbb.spk-berlin.de
@@ -1346,7 +1323,7 @@ https://staatsbibliothek-berlin.de/
     highlightStyle: 'monokai',
     highlightLanguage: 'ini',
     highlightLines: true,
-    /*ratio: '16:9',*/
+    ratio: '16:9',
     /*slideNumberFormat: ''*/
     });
 
