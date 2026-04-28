@@ -42,7 +42,6 @@ $ less code4lib.seq
 
 ## Download MARC data
 
-
 ... from a Z39.50 server with `yaz-client` and a command file
 
 See "[Bath Profile](http://www.ukoln.ac.uk/interop-focus/activities/z3950/int_profile/bath/draft/stable1.html#5.A.1.%20Functional%20Area%20A:%20Level%201%20Basic%20Bibliographic%20Search%20and%20Retrieval%20Emphasizing%20Precision)" or "[Bib-1 Attribute Set](https://software.indexdata.com/yaz/doc/bib1.html)" for common search and retrieval operations and attribute sets.
@@ -153,7 +152,7 @@ $ less loc.tsv
 ```bash
 # convert NFD to NFC normalization form  
 $ uconv -x NFC nfd.xml > nfc.xml
-# show difference between files: only lines with umlauts are marked. 
+# show difference between files: only lines with umlauts are marked
 $ diff nfc.xml nfd.xml
 # show the different Unicode code points for NFC and NFD normalized umlauts
 $ echo -n 'üü' | uconv -x Any-Name
@@ -175,12 +174,12 @@ $ yaz-marcdump -i marcxml -o turbomarc loc.mrc.xml
 
 ```bash
 # MARC (ISO 2709) to MARC-in-JSON
-$ catmandu convert MARC to MARC --type MiJ < elag.z3950.mrc
+$ catmandu convert MARC to MARC --type MiJ < loc.mrc
 # MARC XML to MARCMaker
 $ catmandu convert MARC --type XML to MARC --type MARCMaker < loc.mrc.xml
 # MARC to Breaker
 $ catmandu convert MARC --type XML to Breaker --handler marc < loc.mrc.xml 
-# MARC to CSV. mapping with fixes required.
+# MARC to CSV, mapping with fixes required
 $ catmandu convert MARC --type XML to TSV \
 --fix 'marc_map(022a,bibo_issn,join:";");marc_map(245abc,dc_title,join:" ");remove_field(record)' \
 < loc.mrc.xml
@@ -189,8 +188,6 @@ $ catmandu convert MARC --type XML to TSV \
 ### ... with `xlstproc`
 
 ```bash
-# MARC XML to MODS
-$ xsltproc MARC21slim2MODS3-7.xsl loc.mrc.xml
 # MARC XML to RFD-DC
 $ xsltproc MARC21slim2RDFDC.xsl loc.mrc.xml
 # MARC XML to BIBFRAME
@@ -225,10 +222,10 @@ Get title from MARC 245$a:
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
 ```
 
-Get all ISSN from MARC 022$a:
+Get all ISBN from MARC 020$a:
 
 ```bash
-$ xmllint --xpath '//*[local-name()="datafield"][@tag="022"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
+$ xmllint --xpath '//*[local-name()="datafield"][@tag="020"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
 ```
 
 Extract all DDC numbers from MARC 082$a:
@@ -244,9 +241,9 @@ Use `Catmandu::Breaker` in combination unix utilities like `grep`, `cut`, `sort`
 ```bash
 # check the Breaker output format
 $ catmandu convert MARC --type XML to Breaker --handler marc < loc.mrc.xml
-# get all ISSNs from MARC 022$a
+# get all ISBNs from MARC 020$a
 $ catmandu convert MARC --type XML to Breaker --handler marc < loc.mrc.xml | \
-grep -P '\t022a\t' | cut -f 3 | sort
+grep -P '\t020a\t' | cut -f 3 | sort
 # get all uniq DDC form MARC 082$a
 $ catmandu convert MARC --type XML to Breaker --handler marc < loc.mrc.xml | \
 grep -P '\t082a\t' | cut -f 3 | sort | uniq -c 
@@ -255,9 +252,9 @@ grep -P '\t082a\t' | cut -f 3 | sort | uniq -c
 Use the `MARCMaker` format in combination with `grep`:
 
 ```bash
-# get all MARC 022 fields
+# get all MARC 020 fields
 $ catmandu convert MARC --type XML to MARC --type MARCMaker < loc.mrc.xml | \
-grep -P '^=022'
+grep -P '^=020'
 # get all MARC 245 fields with indicators 0  
 $ catmandu convert MARC --type XML to MARC --type MARCMaker  < loc.mrc.xml | \
 grep -P '^=245  00'
