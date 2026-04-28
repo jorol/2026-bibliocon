@@ -161,7 +161,7 @@ A MARC record is terminated with a record terminator (Unicode character 'INFORMA
 
 Each part of a record is terminated with a field terminator (Unicode character 'INFORMATION SEPARATOR TWO' [U+001E](https://www.fileformat.info/info/unicode/char/001e/index.htm)).
 
-Each subfield of the data fields is terminated with a subfield terminator (Unicode character 'INFORMATION SEPARATOR THREE' [U+001F](https://www.fileformat.info/info/unicode/char/001e/index.htm)). 
+Each subfield of the data fields is terminated with a subfield terminator (Unicode character 'INFORMATION SEPARATOR ONE' [U+001F](https://www.fileformat.info/info/unicode/char/001f/index.htm)). 
 
 ---
 
@@ -311,9 +311,6 @@ The formats differ slightly in the representation of MARC tags, indicators and s
 
 It is suitable for display but not recommended for further (machine) processing.  
 
----
-
-## Example "MARC Line" record
 
 ```no-highlight
 00251nas a2200121 c 4500
@@ -336,9 +333,6 @@ This format was developed to create MARC records without having to use a MARC-ba
 
 It is the most widely used line-based format and supported by several software tools (e.g. Catmandu, MarcEdit) and libraries (e.g. marc4j, pymarc).
 
----
-
-## Example "MARCMaker" record
 
 ```no-highlight
 =LDR  00251nas a2200121 c 4500
@@ -359,9 +353,6 @@ It is the most widely used line-based format and supported by several software t
 
 "[MicroLIF](http://web.sonoma.edu/users/h/huangp/MARC_MicroLIF.htm)" is a MARC compatible record format created by a group of publishers and vendors in the '80s.
 
----
-
-## Example "MircoLIF" record
 
 ```no-highlight
 LDR00251nas a2200121 c 4500^
@@ -381,10 +372,6 @@ LDR00251nas a2200121 c 4500^
 ## Aleph Sequential
 
 "Aleph Sequential" is a line-based serialization format used by Ex Libris Ltd. integrated library systems "[Aleph](https://exlibrisgroup.com/products/aleph-integrated-library-system/)".
-
----
-
-## Example "Aleph Sequential" record
 
 ```no-highlight
 987874829 FMT   L BK
@@ -585,27 +572,6 @@ to MARC --type MARCMaker
 
 ---
 
-## SRU - yaz-client
-
-You can use the `yaz-client` to search and retrive data from a SRU server:
-
-```bash
-# open client
-$ yaz-client
-# connect to database
-Z> open http://sru.k10plus.de/opac-de-627
-# append retrieved records to file
-Z> set_marcdump sru_k10p.mrc.xml
-# find record for subject
-Z> find find pica.per="Tempest, Kae"
-# get first 50 records
-Z> show 1+50
-# close client
-Z> exit
-```
-
----
-
 ## SRU - yaz-client command file
 
 ```
@@ -613,13 +579,14 @@ Z> exit
 $ cat sru.cmdfile
 open http://sru.k10plus.de/opac-de-627
 set_marcdump sru_k10p.mrc.xml
+format marcxml
 find pica.per="Tempest, Kae"
 show 1+50
 exit
 # run command file
 $ yaz-client -f sru.cmdfile
-# shopw records 
-$ xmllint --formatt sru_k10p.mrc.xml
+# show records. problem: file contains several XML documents
+$ xmllint --format sru_k10p.mrc.xml
 ```
 
 ---
@@ -671,17 +638,12 @@ class: middle
 
 The command-line tool `yaz-marcdump` can be used for several MARC related tasks. 
 
-To validate the structure of "MARC (ISO 2709)" records use the option `-n`, which will omit any other output:
+To validate the structure of MARC records use the option `-n`, which will omit any other output:
 
 ```bash
+# validate MARC ISO records
 $ yaz-marcdump -n loc.mrc
-```
-
----
-
-If you want to validate records in other MARC formats you have to specify the format with option `-i`:
-
-```bash
+# validate MARC XML records
 $ yaz-marcdump -n -i marcxml loc.mrc.xml
 ```
 
@@ -690,14 +652,6 @@ $ yaz-marcdump -n -i marcxml loc.mrc.xml
 If `yaz-marcdump` finds any errors it will output an error message:
 
 ```bash
-$ yaz-marcdump -n bad_hathi_records.mrc 
-<!-- EOF while searching for RS -->
-```
-
----
-
-To narrow down the error use option `-p`, which will print the record numbers and offsets:
-
 ```bash
 $ yaz-marcdump -np bad_hathi_records.mrc 
 <!-- Record 1 offset 0 (0x0) -->
@@ -705,86 +659,22 @@ $ yaz-marcdump -np bad_hathi_records.mrc
 <!-- Record 3 offset 5259 (0x148b) -->
 <!-- Record 4 offset 6343 (0x18c7) -->
 <!-- EOF while searching for RS -->
+```
 ```
 
 ---
 
 class: middle
 
-## [Common structural problems](https://bibwild.wordpress.com/2010/02/02/structural-marc-problems-you-may-encounter/) in MARC records
+## [Common structural problems](https://bibwild.wordpress.com/2010/02/02/structural-marc-problems-you-may-encounter/) in MARC records:
 
----
 
-## Invalid leader bytes
-
-```bash
-$ yaz-marcdump -np bad_leaders_10_11.mrc 
-<!-- Record 1 offset 0 (0x0) -->
-Indicator length at offset 10 should hold a number 1-9. Assuming 2
-Identifier length at offset 11 should  hold a number 1-9. Assuming 2
-Length data entry at offset 20 should hold a number 3-9. Assuming 4
-Length starting at offset 21 should hold a number 4-9. Assuming 5
-Length implementation at offset 22 should hold a number. Assuming 0
-```
-
----
-
-## Record exceeds the maximum length
-
-```bash
-$ yaz-marcdump -np bad_hathi_records.mrc 
-<!-- Record 1 offset 0 (0x0) -->
-<!-- Record 2 offset 1293 (0x50d) -->
-<!-- Record 3 offset 5259 (0x148b) -->
-<!-- Record 4 offset 6343 (0x18c7) -->
-<!-- EOF while searching for RS -->
-```
-
----
-
-## Field exceeds the maximum length
-
-```bash
-$ yaz-marcdump -np bad_oversize_field_bad_directory.mrc 
-<!-- Record 1 offset 0 (0x0) -->
-<!-- Record 2 offset 1571 (0x623) -->
-Directory offset 240: Bad value for data length and/or length starting (0\x1Edrd-348919)
-Base address not at end of directory, base 242, end 241
-Directory offset 216: Data out of bounds 21398 >= 11833
-<!-- Record 3 offset 13404 (0x345c) -->
-<!-- Record 4 offset 16133 (0x3f05) -->
-<!-- Record 5 offset 18823 (0x4987) -->
-```
-
----
-
-## Invalid subfield element
-
-```bash
-$ yaz-marcdump -np -i marcxml chabon-bad-subfields-element.xml 
-yaz_marc_read_xml failed
-```
-
----
-
-## MARC control character in internal data value
-
-```bash
-$ yaz-marcdump -np bad_data_value.mrc 
-<!-- Record 1 offset 0 (0x0) -->
-Separator but not at end of field length=37
-```
-
----
-
-## Wrong encoded character
-
-```bash
-$ yaz-marcdump -np bad_encoding.mrc 
-<!-- Record 1 offset 0 (0x0) -->
-No separator at end of field length=53
-No separator at end of field length=64
-```
+- invalid leader bytes
+- record exceeds the maximum length
+- record field exceeds the maximum length
+- invalid subfield element
+- MARC control character in internal data value
+- wrong encoded character
 
 ---
 
@@ -815,108 +705,19 @@ While `yaz-marcdump` and `xmllint` are useful to identify structural problems wi
 By default `marcvalidate` expects "MARC (ISO 2709)" records:
 
 ```bash
+# validate MARC ISO records
 $ marcvalidate loc.mrc
 12360325    906 unknown field    
 1180649 035 unknown subfield    9
 ...
-```
-
----
-
-To validate "MARC XML" data use option `--type`:
-
-```bash
+# validate MARC XML records
 $ marcvalidate --type XML loc.mrc.xml
 12360325    906 unknown field    
 1180649 035 unknown subfield    9
 ...
-```
-
----
-
-To validate against a local Avram schema use option `--schema`:
-
-```bash
+# validate against custom schema
 $ marcvalidate --schema my_schema.json loc.mrc
 ```
----
-
-## Avram schema for MARC
-
-```
-...
-"022": {
-    "historical-subfields": {
-        "b": {
-            "label": "Form of issue [OBSOLETE] [CAN/MARC only]"
-        },
-        "c": {
-            "label": "Price [OBSOLETE] [CAN/MARC only]"
-        }
-    },
-    "indicator1": {
-        "codes": {
-            " ": {
-                "label": "No level specified"
-            },
-            "0": {
-                "label": "Continuing resource of international interest"
-            },
-            "1": {
-                "label": "Continuing resource not of international interest"
-            }
-        },
-        "label": "Level of international interest"
-    },
-    "indicator2": null,
-    "label": "International Standard Serial Number",
-    "repeatable": true,
-    "subfields": {
-        "2": {
-            "label": "Source",
-            "repeatable": false
-        },
-        "6": {
-            "label": "Linkage",
-            "repeatable": false
-        },
-        "8": {
-            "label": "Field link and sequence number",
-            "repeatable": true
-        },
-        "a": {
-            "label": "International Standard Serial Number",
-            "repeatable": false
-        },
-        "l": {
-            "label": "ISSN-L",
-            "repeatable": false
-        },
-        "m": {
-            "label": "Canceled ISSN-L",
-            "repeatable": true
-        },
-        "y": {
-            "label": "Incorrect ISSN",
-            "repeatable": true
-        },
-        "z": {
-            "label": "Canceled ISSN",
-            "repeatable": true
-        }
-    },
-    "tag": "022",
-    "url": "https://www.loc.gov/marc/bibliographic/bd022.html"
-},
-...
-```
-
-
----
-
-## QA catalogue
-
-If you want to run more detailed analyses check "[QA catalogues - a metadata quality assessment tool for MARC records](https://github.com/pkiraly/metadata-qa-marc)".
 
 ---
 
@@ -950,7 +751,7 @@ Tag     Rep.    Occ.,%
 
 ## ... with Catmandu
 
-If you want generate statistics for other MARC serialization use  [Catmandu::Breaker](https://metacpan.org/pod/Catmandu::Breaker). First you need to "break" the MARC records into pieces. Afterwards you can calculate statistics for MARC tags and subfield codes. 
+If you want generate statistics for other MARC serialization use [Catmandu::Breaker](https://metacpan.org/pod/Catmandu::Breaker). First you need to "break" the MARC records into pieces. Afterwards you can calculate statistics for MARC tags and subfield codes. 
 
 ```bash
 $ catmandu convert MARC --type XML to Breaker --handler marc \
@@ -970,8 +771,6 @@ $ catmandu breaker --fields 245a,020a loc.breaker
 | 245a | 50    | 0     | 0.0    | 1   | 1   | 1    | 0.0      | 0.0   | 45    | 90.1  | 5.4/5.6 |
 | 020a | 52    | 12    | 24.0   | 0   | 4   | 1.04 | 0.8      | 0.9   | 51    | 98.2  | 5.3/6.0 |
 ```
-
----
 
 Use option `--as` to specify a tabular output format (CSV, TSV, XLS(X)):
 
@@ -1044,35 +843,14 @@ class: middle
 
 `yaz-marcdump` can be used to tranform MARC data between different serializations. Use options `-i` and `-o` to specfiy the input and output formats.
 
----
-
-## "MARC (ISO 2709)" to "MARC XML"
-
 ```bash
+# MARC (ISO 2709) to MARC XML
 $ yaz-marcdump -i marc -o marcxml code4lib.mrc > code4lib.xml
-```
-
----
-
-## "MARC (ISO 2709)" to "Turbomarc"
-
-```bash
+# MARC (ISO 2709) to Turbomarc
 $ yaz-marcdump -i marc -o turbomarc code4lib.mrc > code4lib.turbo.xml
-```
-
----
-
-## "MARC (ISO 2709)" to "MARC Line"
-
-```bash
+# MARC (ISO 2709) to MARC Line
 $ yaz-marcdump -i marc -o line code4lib.mrc > code4lib.line
-```
-
----
-
-## "MARC XML" to "MARC-in-JSON"
-
-```bash
+# MARC XML to MARC-in-JSON
 $ yaz-marcdump -i marcxml -o json code4lib.mrc.xml > code4lib.json
 ```
 
@@ -1082,50 +860,24 @@ $ yaz-marcdump -i marcxml -o json code4lib.mrc.xml > code4lib.json
 
 The command-line interface of the Catmandu toolkit also offers several tranformations of MARC data. The default MARC serialization is "MARC (ISO 2709)".
 
----
-
-## "MARC (ISO 2709)" to "MARC XML"
-
 ```bash
-$ catmandu convert MARC to MARC --type XML < code4lib.mrc \
+# MARC (ISO 2709) to MARC XML
+$ catmandu convert MARC toe MARC --type XML < code4lib.mrc \
 > code4lib.xml
-```
-
----
-
-## "MARC XML" to "MARC (ISO 2709)"
-
-```bash
+# MARC XML to MARC (ISO 2709)
 $ catmandu convert MARC --type XML to MARC < code4lib.xml \
 > code4lib.mrc
-```
-
----
-
-## "MARC (ISO 2709)" to "MARCMaker"
-
-```bash
+MARC (ISO 2709) to MARCMaker
 $ catmandu convert MARC to MARC --type MARCMaker < code4lib.mrc \
 > code4lib.mrk
-```
-
----
-
-## "MARC XML" to "MARC-in-JSON"
-
-```bash
+# MARC XML to MARC-in-JSON
 $ catmandu convert MARC --type XML to MARC --type MiJ \
 < code4lib.xml > code4lib.json
-```
-
----
-
-## "MARC XML" to YAML
-
-```bash
+# MARC XML to YAML
 $ catmandu convert MARC to YAML < code4lib.mrc \
 > code4lib.yml
 ```
+
 
 ---
 
@@ -1211,43 +963,19 @@ If you want transform MARC records to other formats, you have to map MARC (sub)f
 
 Based on these crosswalks the Library of Congress published several [XLS stylesheets](https://www.loc.gov/standards/marcxml/#stylesheets), which can be used with a XSLT processor to transform "MARC XML" records to other formats like BIBFRAME, HTML, MODS, OAI-DC and RDF. 
 
----
-
-## "MARC XML" to MODS
-
-```bash
-$ xsltproc MARC21slim2MODS3-7.xsl loc.mrc.xml > loc.mods.xml
-```
 
 ---
 
-## "MARC XML" to HTML
+## xsltproc
 
 ```bash
-$ xsltproc MARC21slim2HTML.xsl loc.mrc.xml > loc.html
-```
-
----
-
-## "MARC XML" to "OAI-DC"
-
-```bash
+# MARC XML to HTML
+$  MARC21slim2HTML.xsl loc.mrc.xml > loc.html
+# MARC XML to OAI-DC
 $ xsltproc MARC21slim2OAIDC.xsl loc.mrc.xml > loc.oaidc.xml
-```
-
----
-
-## "MARC XML" to "RDF-DC"
-
-```bash
+# MARC XML to RDF-DC
 $ xsltproc MARC21slim2RDFDC.xsl loc.mrc.xml > loc.rdfdc.xml
-```
-
----
-
-## "MARC XML" to "[BIBFRAME](https://github.com/lcnetdev/marc2bibframe2)"
-
-```bash
+# MARC XML to [BIBFRAME](https://github.com/lcnetdev/marc2bibframe2)
 $ xsltproc bibframe-xsl/marc2bibframe2.xsl loc.mrc.xml \
 > loc.bibframe.xml
 ```
@@ -1283,65 +1011,36 @@ $ head loc.mrc.xml
 If a namespace is set use the "local" XML element name in the [XPATH](https://www.w3.org/TR/2017/REC-xpath-31-20170321/) expression:
 
 ```bash
-$ xmllint --xpath '//*[local-name()="controlfield"]/@tag' \
+# no XML namespace
+$ xmllint --xpath '//controlfield/@tag' \
 loc.mrc.xml 
+# with XML namespace
+$ xmllint --xpath '//*[local-name()="controlfield"]/@tag' \
+loc.mrc.xml
 ```
 
 ---
 
-## Extract all tags and count them
+## xmllint --xpath
+
 
 ```bash
+# extract all tags and count them
 $ xmllint --xpath '//@tag' loc.mrc.xml | sort | uniq -c
-```
-
----
-
-## Extract all IDs from MARC 001:
-
-```bash
-$ xmllint --xpath '//*[local-name()="controlfield"][@tag="001"]/text()'  loc.mrc.xml
-```
-
----
-
-## Extract all subfields from MARC 245 fields
-
-```bash
+# extract all IDs from MARC 001:
+$ xmllint --xpath '//*[local-name()="controlfield"][@tag="001"]/text()' loc.mrc.xml
+# extract all subfields from MARC 245 fields
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]' loc.mrc.xml
-```
-
----
-
-## Extract subfield "a" from MARC 245 fields
-
-```bash
+# extract subfield "a" from MARC 245 fields
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]/*[local-name()="subfield"][@code="a"]/' loc.mrc.xml
-```
-
----
-
-## Extract content from subfield "a" from MARC 245 fields
-
-```bash
+# extract content from subfield "a" from MARC 245 fields
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
-```
-
----
-
-## Extraxt all ISBNs
-
-```bash
+# extract all ISBNs
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="020"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
-```
-
----
-
-## Extract all DDC numbers
-
-```bash
+# extract all DDC numbers
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="082"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
 ```
+
 
 ---
 
@@ -1584,7 +1283,6 @@ Use [`issn`](https://metacpan.org/pod/Catmandu::Fix::issn),  [`isbn10`](https://
 # { "issn" : "1553667x" }
 issn(issn)
 # { "issn" : "1553-667X" }
-
 # { "isbn" : "1565922573" }
 isbn10(isbn) 
 # {"isbn" : "1-56592-257-3" }
