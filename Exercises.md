@@ -400,7 +400,11 @@ Extract and normalize IBSNs, keep only uniques:
 
 ```bash
 $ catmandu convert -v MARC --type XML to JSON --pretty 1 \
---fix 'marc_map(020a,bibo_isbn,split:1); replace_all(bibo_isbn.*,"\s.*$","");isbn13(bibo_isbn.*);uniq(bibo_isbn);remove_field(record);' \
+--fix 'marc_map(020a,bibo_isbn,split:1);
+replace_all(bibo_isbn.*,"\s.*$","");
+isbn13(bibo_isbn.*);
+uniq(bibo_isbn);
+remove_field(record);' \
 < loc.mrc.xml
 ```
 
