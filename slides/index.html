@@ -807,8 +807,8 @@ Unicode provides single code points for many characters that could be viewed  as
 With the command-line utility `uconv` you can transliterate data between different Unicode [normalization forms](https://unicode.org/reports/tr15/#Norm_Forms): 
 
 ```bash
-$ uconv -x NFC marc21.nfd.xml > marc21.nfc.xml
-$ uconv -x NFD marc21.nfc.xml > marc21.nfd.xml
+$ uconv -x NFD nfc.xml > nfd.xml
+$ uconv -x NFC nfd.xml > nfc.xml
 ```
 
 You should only normalize "MARC XML" data, as the normalization of "MARC (ISO 2709)" would result in corrupted records, due to different field length.
@@ -851,7 +851,7 @@ The command-line interface of the Catmandu toolkit also offers several tranforma
 
 ```bash
 # MARC (ISO 2709) to MARC XML
-$ catmandu convert MARC toe MARC --type XML < code4lib.mrc \
+$ catmandu convert MARC to MARC --type XML < code4lib.mrc \
 > code4lib.xml
 # MARC XML to MARC (ISO 2709)
 $ catmandu convert MARC --type XML to MARC < code4lib.xml \
@@ -937,7 +937,7 @@ $ catmandu convert MARC to CSV \
 
 ---
 
-## ... with XLST
+## ... with XSLT
 
 If you want transform MARC records to other formats, you have to map MARC (sub)fields to corresponding fields of the other format. The Libary of Congress provides several crosswalks:
 
@@ -957,7 +957,7 @@ Based on these crosswalks the Library of Congress published several [XLS stylesh
 
 ```bash
 # MARC XML to HTML
-$  MARC21slim2HTML.xsl loc.mrc.xml > loc.html
+$ xsltproc MARC21slim2HTML.xsl loc.mrc.xml > loc.html
 # MARC XML to OAI-DC
 $ xsltproc MARC21slim2OAIDC.xsl loc.mrc.xml > loc.oaidc.xml
 # MARC XML to RDF-DC

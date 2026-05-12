@@ -151,7 +151,7 @@ $ less loc.tsv
 
 ```bash
 # convert NFD to NFC normalization form  
-$ uconv -x NFC nfd.xml > nfc.xml
+$ uconv -x NFD nfc.xml > nfd.xml
 # show difference between files: only lines with umlauts are marked
 $ diff nfc.xml nfd.xml
 # show the different Unicode code points for NFC and NFD normalized umlauts
