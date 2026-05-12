@@ -1018,7 +1018,7 @@ $ xmllint --xpath '//*[local-name()="controlfield"][@tag="001"]/text()' loc.mrc.
 # extract all subfields from MARC 245 fields
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]' loc.mrc.xml
 # extract subfield "a" from MARC 245 fields
-$ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]/*[local-name()="subfield"][@code="a"]/' loc.mrc.xml
+$ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]/*[local-name()="subfield"][@code="a"]' loc.mrc.xml
 # extract content from subfield "a" from MARC 245 fields
 $ xmllint --xpath '//*[local-name()="datafield"][@tag="245"]/*[local-name()="subfield"][@code="a"]/text()' loc.mrc.xml
 # extract all ISBNs
