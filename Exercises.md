@@ -66,7 +66,7 @@ You can edit the command file, e.g. the query:
 
 ```bash
 $ micro z3950.cmdfile 
-# press `CTRL + s` to save file and `CTRL + x` to quit editor
+# press `CTRL + s` to save file and `CTRL + q` to quit editor
 ```
 
 ### ... from a SRU server with `catmandu`
