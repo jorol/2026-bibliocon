@@ -1,6 +1,4 @@
-# Required software
-
-If you don’t want to use the VM you can install all tools on your own system. All necessary steps are described using a Debian based system. 
+# Used software & tools
 
 ## Perl
 
